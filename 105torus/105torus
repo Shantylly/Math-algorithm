@@ -1,0 +1,112 @@
+#!/usr/bin/python3
+
+from math import *
+import sys
+
+# PARSING
+# ---------------------------------------------------------------------- #
+
+if (len(sys.argv) != 8):
+    exit (84)
+
+j = 1
+while (j < 8):
+	if (sys.argv[j].isalpha()):
+		exit (84)
+	j = j + 1
+
+if (int(sys.argv[1]) != 1 and int(sys.argv[1]) != 2 and int(sys.argv[1]) != 3):
+    exit (84)
+
+opt = float(sys.argv[1])
+a0 = float(sys.argv[2])
+a1 = float(sys.argv[3])
+a2 = float(sys.argv[4])
+a3 = float(sys.argv[5])
+a4 = float(sys.argv[6])
+n = int(sys.argv[7])
+i = 1
+
+#ERROR HANDLING
+# ---------------------------------------------------------------------- #
+
+if (n < 0):
+	exit (84)
+
+def inter(str_av):
+    if (str_av[0] == '-'):
+        i = 1
+    else:
+        i = 0
+    while (i < len(str_av)):
+        if (str_av[i] < '0' or str_av[i] > '9'):
+            exit (84)
+        i = i + 1
+
+while (i < 8):
+    inter(sys.argv[i])
+    i = i + 1
+
+#SHORTCUT
+# ---------------------------------------------------------------------- #
+
+def f(c, a0, a1, a2, a3, a4):
+	c = c
+	return a0 + a1 * c + a2 * pow(c, 2) + a3 * pow(c, 3) + a4 * pow(c, 4)
+
+def f_prime(c, a0, a1, a2, a3, a4):
+	res = (4 * a4 * pow(c, 3) + 3 * a3 * pow(c, 2) + 2 * a2 * c + a1)
+	if (res == 0):
+		exit(84)
+	return res
+
+#BISECTION
+# ---------------------------------------------------------------------- #
+
+if (opt == 1):
+	a = 0.0
+	b = 1.0
+	while b - a > pow(10, -6):
+		c = (a + b) / 2
+		if (pow(10, n) * c % 1 == 0):
+			print ("x =", c)
+		else:
+			print ("x = %.*f" % (n, c))
+		if (f(a, a0, a1, a2, a3, a4) < 0 and f(c, a0, a1, a2, a3, a4) > 0) or (f(a, a0, a1, a2, a3, a4) > 0 and f(c, a0, a1, a2, a3, a4) < 0):
+			b = c
+		else:
+			a = c
+
+#NEWTON
+# ---------------------------------------------------------------------- #
+
+if (opt == 2):
+	c = 0.5
+	while abs(f(c, a0, a1, a2, a3, a4)) > pow(10, -n):
+		if pow(10, n) * c % 1 == 0:
+			print ("x = %g" % (c))
+		else:
+			print("x = %.*f" % (n, c))
+		c = c - f(c, a0, a1, a2, a3, a4) / f_prime(c, a0, a1, a2, a3, a4)
+	if pow(10, n) * c % 1 == 0:
+		print ("x = %g" % (c))
+	else:
+		print("x = %.*f" % (n, c))
+
+#SECANT
+# ---------------------------------------------------------------------- #
+
+if (opt == 3):
+	a = 0.0
+	b = 1.0
+	calc = f(b, a0, a1, a2, a3, a4) - f(a, a0, a1, a2, a3, a4)
+	if (calc == 0):
+		exit (84)
+	while abs(b - a) > pow(10, -n):
+		c = b - f(b, a0, a1, a2, a3, a4) * (b - a) / calc
+		a = b
+		b = c
+		if (pow(10, n) * c % 1 == 0):
+			print ("x =", c)
+		else:
+			print ("x = %.*f" % (n, c))
