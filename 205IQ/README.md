@@ -12,10 +12,10 @@ This algorithm need to be calibrate and we are asked to provide the following ta
 	- ./205IQ u s \[IQ1] \[IQ2]
 
 * DESCRIPTION
-	u	population  
-	s	standard deviation  
-	IQ1	minimum IQ  
-	IQ2	maximum IQ  
+	- u	population
+	- s	standard deviation
+	- IQ1	minimum IQ
+	- IQ2	maximum IQ
 
 ## Bonus
 
