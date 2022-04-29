@@ -1,0 +1,126 @@
+#!/usr/bin/env python3
+
+import sys
+
+# Usage
+# ---------------------------------------------------------------------- #
+
+def help():
+    print("USAGE\n   ./202unsold a b\n")
+    print("DESCRIPTION")
+    print("    a     constant computed from past results")
+    print("    b     constant computed from past results")
+
+# Subject formula
+# ---------------------------------------------------------------------- #
+
+def get_result(x, y, a, b):
+    return ((a - x) * (b - y)) / ((5 * a - 150) * (5 * b - 150))
+
+def get_tab(tab, i, j, axis):
+    result = 0
+    k = 0
+    for k in range(5):
+        result += tab[i][j]
+        if axis == 1:
+            j += 1
+        else:
+            i += 1
+        k += 1
+    return result
+
+# Calculation and display
+# ---------------------------------------------------------------------- #
+
+def x_y_law(tab):
+    print("\tX=10\tX=20\tX=30\tX=40\tX=50\tY law")
+    for i in range(len(tab)):
+        print("Y=" + str((i + 1) * 10), end='\t')
+        for j in range(len(tab[i])):
+                print("%.3f" % tab[i][j], end='\t')
+        yy.append(get_tab(tab, i, 0, 1))
+        print("%.3f" % get_tab(tab, i, 0, 1))
+    print("X law\t", end='')
+    for s in range(len(tab) - 1):
+        xx.append(get_tab(tab, 0, s, 0))
+        print("%.3f" % get_tab(tab, 0, s, 0), end='\t')
+    xx.append(get_tab(tab, 0, s + 1, 0))
+    print("%.3f" % get_tab(tab, 0, s + 1, 0) + "\t1.000")
+
+def z_law(a, b):
+    z = 2
+    print("z\t20\t30\t40\t50\t60\t70\t80\t90\t100\np(Z=z)", end='')
+    for z in range(2, 11):
+        result = 0.0
+        sum = 0.0
+        for y in range(1, 6):
+            for x in range(1, 6):
+                result = get_result(x * 10, y * 10, a, b)
+                if (x + y == z and y < 6):
+                    sum += result
+        print("\t%0.3f" %(sum), end='')
+    print("")
+
+def variance():
+    expX = 0.0
+    expY = 0.0
+    totalX = 0.0
+    totalY = 0.0
+    for i in range(0, 5):
+        totalX += xx[i] * ((i + 1) * 10)
+        totalY += yy[i] * ((i + 1) * 10)
+    for i in range(0, 5):
+        expX += ((i + 1) * 10 - totalX) * ((i + 1) * 10 - totalX) * xx[i]
+        expY += ((i + 1) * 10 - totalY) * ((i + 1) * 10 - totalY) * yy[i]
+    print("expected value of X:\t" + "%0.1f" %(totalX))
+    print("variance of X:\t\t" + "%0.1f" %(expX))
+    print("expected value of Y:\t" + "%0.1f" %(totalY))
+    print("variance of Y:\t\t" + "%0.1f" %(expY))
+    print("expected value of Z:\t" + "%0.1f" %(totalX + totalY))
+    print("variance of Z:\t\t" + "%0.1f" %(expX + expY))
+
+def display(tab, a, b):
+    print("--------------------------------------------------------------------------------")
+    x_y_law(tab)
+    print("--------------------------------------------------------------------------------")
+    z_law(a, b)
+    print("--------------------------------------------------------------------------------")
+    variance()
+    print("--------------------------------------------------------------------------------")
+
+# Error handling and parsing
+# ---------------------------------------------------------------------- #
+
+if len(sys.argv) == 2:
+    if sys.argv[1] == "-h":
+        help()
+        exit(0)
+    exit(84)
+
+if len(sys.argv) != 3:
+    exit(84)
+
+a = 0
+b = 0
+
+for i in range(len(sys.argv)):
+    if (i == 0):
+        continue
+    if (i > 2):
+        break
+    if (not sys.argv[i].isnumeric()):
+        exit(84)
+    if (i == 1):
+        a = int(sys.argv[i])
+    if (i == 2):
+        b = int(sys.argv[i])
+
+if (a <= 50 or b <= 50):
+    exit(84)
+
+tab = [[float(get_result((x + 1) * 10, (y + 1) * 10, a, b))
+        for x in range(5)] for y in range(5)]
+xx = []
+yy = []
+display(tab, a, b)
+    
