@@ -1,0 +1,96 @@
+#!/usr/bin/python3
+
+from math import *
+import sys
+
+# Parsing
+# ---------------------------------------------------------------------- #
+
+if (len(sys.argv) != 9):
+    exit (84)
+if (float(sys.argv[1]) > 3):
+    exit (84)
+
+opt = float(sys.argv[1])
+xp = float(sys.argv[2])
+yp = float(sys.argv[3])
+zp = float(sys.argv[4])
+xv = float(sys.argv[5])
+yv = float(sys.argv[6])
+zv = float(sys.argv[7])
+p = float(sys.argv[8])
+
+#SPHERE
+# ---------------------------------------------------------------------- #
+
+if (opt == 1):
+    if (p <= 0):
+        exit(84)
+    A = xv**2 + yv**2 + zv**2
+    B = 2*(xv * xp) + 2*(yv * yp) + 2*(zv * zp)
+    C = xp**2 + yp**2 + zp**2 - p**2
+    print ("Sphere of radius", "%.f"%p)
+    print ("Line passing through the point (%.f, %.f, %.f) and parallel to the vector (%.f, %.f, %.f)"%(xp, yp, zp, xv, yv, zv))
+
+#CYLINDER
+# ---------------------------------------------------------------------- #
+
+if (opt == 2):
+    if (p <= 0):
+        sys.exit(84)
+    if (xv == 0 and yv == 0 and zv == 0):
+        sys.exit(84)
+    A = xv**2 + yv**2
+    B = 2*(xv * xp) + 2*(yv * yp)
+    C = xp**2 + yp**2 - p**2
+    print ("Cylinder of radius", "%.f"%p)
+    print ("Line passing through the point (%.f, %.f, %.f) and parallel to the vector (%.f, %.f, %.f)"%(xp, yp, zp, xv, yv, zv))
+    if (xv == 0 and yv == 0 and zv != 0):
+        if (xp**2 + yp**2 == p**2):
+            print ("There is an infinite number of intersection points.")
+            exit(0)
+    if (A == 0):
+        print ("No intersection point.")
+        exit(0)
+
+#CONE
+# ---------------------------------------------------------------------- #
+
+if (opt == 3):
+    if (p > 90 or p <= 0):
+        exit(84)
+    radius = p * pi / 180.0
+    A = xv * xv + yv * yv - (zv * zv) * (tan(radius))**2
+    B = 2*(xv * xp) + 2*(yv * yp) - (2*(zv * zp)) * (tan(radius))**2
+    C = xp * xp + yp * yp - (zp * zp) * (tan(radius))**2
+    print ("Cone with a", "%.f"% p, "degree angle")
+    print ("Line passing through the point (%.f, %.f, %.f) and parallel to the vector (%.f, %.f, %.f)"%(xp, yp, zp, xv, yv, zv))
+
+#INTERSECTION POINT
+# ---------------------------------------------------------------------- #
+
+intersec = (B * B) - (4 * A * C)
+
+if (intersec < 0):
+    print ("No intersection point.")
+
+elif (intersec == 0):
+    j = -B / (2 * A)
+    x = j * xv + xp
+    y = j * yv + yp
+    z = j * zv + zp
+    print ("1 intersection point:")
+    print ("(%.3f, %.3f, %.3f)"%(x, y, z))
+
+else:
+    j = (-B - sqrt(intersec))/ (2 * A)
+    j2 = (-B + sqrt(intersec))/ (2 * A)
+    x = j2 * xv + xp
+    y = j2 * yv + yp
+    z = j2 * zv + zp
+    x2 = j * xv + xp
+    y2 = j * yv + yp
+    z2 = j * zv + zp
+    print ("2 intersection points:")
+    print ("(%.3f, %.3f, %.3f)"%(x, y, z))
+    print ("(%.3f, %.3f, %.3f)"%(x2, y2, z2))
