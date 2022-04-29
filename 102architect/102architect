@@ -1,0 +1,180 @@
+#!/usr/bin/env python3
+
+import sys
+import math
+
+# Usage
+# ---------------------------------------------------------------------- #
+
+def showHelp():
+    print("USAGE\n    ./102architect x y transfo1 arg11 [arg12] [transfo2 arg12 [arg22]] ...\n")
+    print("DESCRIPTION\n    x   abscissa of the original point\n    y   ordinate of the original point\n")
+    print("    transfo arg1 [arg2]\n    -t i j  translation along vector (i, j)")
+    print("    -z m n  scaling by factors m (x-axis) and n (y-axis)")
+    print("    -r d    rotation centered in O by a d degree angle")
+    print("    -s d    reflection over the axis passing through O with an inclination angle of d degrees")
+
+
+# Matrix calculation
+# ---------------------------------------------------------------------- #
+
+def translate(i, j):
+    print ("Translation along vector (%.0f, %.0f)" % (i, j))
+    A = [[1, 0, i],
+        [0, 1, j],
+        [0, 0, 1]]
+    return A
+
+def scaling(m, n):
+    print("Scaling by factors %.0f and %.0f" % (m, n))
+    A = [[m, 0, 0],
+        [0, n, 0],
+        [0, 0, 1]]
+    return A
+
+def rotation(d):
+    print("Rotation by a %.0f degree angle" % d)
+    A = [[math.cos(d), -math.sin(d), 0],
+        [math.sin(d), math.cos(d), 0],
+        [0, 0, 1]]
+    return A
+
+def reflection(d):
+    print("Reflection over an axis with an inclination angle of %.0f degrees" % d)
+    A = [[math.cos(2*d), math.sin(2*d), 0],
+        [math.sin(2*d), -math.cos(2*d), 0],
+        [0, 0, 1]]
+    return A
+
+def printResult(x, y, I):
+    print("%.2f %.2f %.2f" % (I[0][0], I[0][1], I[0][2]))
+    print("%.2f %.2f %.2f" % (I[1][0], I[1][1], I[1][2]))
+    print("%.2f %.2f %.2f" % (I[2][0], I[2][1], I[2][2]))
+    print("(%.2f, %.2f) => (%.2f, %.2f)" % (float(sys.argv[1]), float(sys.argv[2]), x, y))
+
+def calculate(I, A):
+    R = [ [ A[0][0]*I[0][0]+A[0][1]*I[1][0]+A[0][2]*I[2][0], A[0][0]*I[0][1]+A[0][1]*I[1][1]+A[0][2]*I[2][1], A[0][0]*I[0][2]+A[0][1]*I[1][2]+A[0][2]*I[2][2] ],
+      [ A[1][0]*I[0][0]+A[1][1]*I[1][0]+A[1][2]*I[2][0], A[1][0]*I[0][1]+A[1][1]*I[1][1]+A[1][2]*I[2][1], A[1][0]*I[0][2]+A[1][1]*I[1][2]+A[1][2]*I[2][2] ],
+      [ A[2][0]*I[0][0]+A[2][1]*I[1][0]+A[2][2]*I[2][0], A[2][0]*I[0][1]+A[2][1]*I[1][1]+A[2][2]*I[2][1], A[2][0]*I[0][2]+A[2][1]*I[1][2]+A[2][2]*I[2][2] ] ]
+    return R
+
+# Parsing
+# ---------------------------------------------------------------------- #
+
+def checkArgs(arg, i):
+    if arg == "-t":
+        if len(sys.argv) < i + 2:
+            exit(84)
+        if sys.argv[i+1].isnumeric is False:
+            exit(84)
+        if sys.argv[i+2].isnumeric is False:
+            exit(84)
+    if arg == "-z":
+        if len(sys.argv) < i + 2:
+            exit(84)
+        if sys.argv[i+1].isnumeric is False:
+            exit(84)
+        if sys.argv[i+2].isnumeric is False:
+            exit(84)
+    if arg == "-r":
+        if len(sys.argv) < i + 1:
+            exit(84)
+        if sys.argv[i+1].isnumeric is False:
+            exit(84)
+    if arg == "-s":
+        if len(sys.argv) < i + 1:
+            exit(84)
+        if sys.argv[i+1].isnumeric is False:
+            exit(84)
+
+def getArgs(arg, i, I):
+    if arg == "-t":
+        if len(sys.argv) < i + 2:
+            exit(84)
+        if sys.argv[i+1].isnumeric is False:
+            exit(84)
+        if sys.argv[i+2].isnumeric is False:
+            exit(84)
+        return calculate(I, translate(float(sys.argv[i+1]), float(sys.argv[i+2])))
+    if arg == "-z":
+        if len(sys.argv) < i + 2:
+            exit(84)
+        if sys.argv[i+1].isnumeric is False:
+            exit(84)
+        if sys.argv[i+2].isnumeric is False:
+            exit(84)
+        return calculate(I, scaling(float(sys.argv[i+1]), float(sys.argv[i+2])))
+    if arg == "-r":
+        if len(sys.argv) < i + 1:
+            exit(84)
+        if sys.argv[i+1].isnumeric is False:
+            exit(84)
+        return calculate(I, rotation(float(sys.argv[i+1])))
+    if arg == "-s":
+        if len(sys.argv) < i + 1:
+            exit(84)
+        if sys.argv[i+1].isnumeric is False:
+            exit(84)
+        return calculate(I, reflection(float(sys.argv[i+1])))
+
+# Error handling and main nested in it
+# ---------------------------------------------------------------------- #
+
+i = 3
+
+I = [ [1, 0, 0],
+      [0, 1, 0],
+      [0, 0, 1] ]
+
+if len(sys.argv) == 2:
+    if sys.argv[1] == "-h":
+        showHelp()
+    exit(0)
+if len(sys.argv) <= 4:
+    exit(84)
+
+while i < len(sys.argv):
+    if sys.argv[i].isnumeric() is True:
+        exit(84)
+    if sys.argv[i] != "-t" and sys.argv[i] != "-z" and sys.argv[i] != "-r" and sys.argv[i] != "-s":
+        exit(84)
+    else:
+        checkArgs(sys.argv[i], i)
+        if sys.argv[i] == "-t":
+            i = i + 2
+        if sys.argv[i] == "-z":
+            i = i + 2
+        if sys.argv[i] == "-r":
+            i = i + 1
+        if sys.argv[i] == "-s":
+            i = i + 1
+    i = i + 1
+
+i = 3
+
+while i < len(sys.argv):
+    if sys.argv[i].isnumeric() is True:
+        exit(84)
+    if sys.argv[i] != "-t" and sys.argv[i] != "-z" and sys.argv[i] != "-r" and sys.argv[i] != "-s":
+        exit(84)
+    else:
+        I = getArgs(sys.argv[i], i, I)
+        if sys.argv[i] == "-t":
+            i = i + 2
+        if sys.argv[i] == "-z":
+            i = i + 2
+        if sys.argv[i] == "-r":
+            i = i + 1
+        if sys.argv[i] == "-s":
+            i = i + 1
+    i = i + 1
+
+if sys.argv[1].isalpha is True:
+    exit(84)
+if sys.argv[2].isalpha is True:
+    exit(84)
+
+x = float(sys.argv[1])
+y = float(sys.argv[2])
+
+printResult(x, y, I)
