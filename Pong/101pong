@@ -1,0 +1,59 @@
+#!/usr/bin/env python3
+
+from required_class import *
+from pong_manager import *
+import sys
+
+# Error handling
+# ---------------------------------------------------------------------- #
+
+if len(sys.argv) == 2:
+    if sys.argv[1] == "-h":
+        help()
+    exit(0)
+if len(sys.argv) != 8:
+    exit(84)
+check_args()
+
+# Parsing
+# ---------------------------------------------------------------------- #
+
+time = sys.argv[7]
+a = sys.argv[1]
+b = sys.argv[2]
+c = sys.argv[3]
+d = sys.argv[4]
+e = sys.argv[5]
+f = sys.argv[6]
+if (a.isalpha() is True or b.isalpha() is True or c.isalpha() is True or d.isalpha() is True or e.isalpha() is True or f.isalpha() is True):
+    exit(84)
+
+if time.isdecimal() is False:
+    exit(84)
+time = int(time)
+if time < 0:
+    exit(84)
+
+ball = ball()
+ball.x0 = float(sys.argv[1])
+ball.y0 = float(sys.argv[2])
+ball.z0 = float(sys.argv[3])
+ball.x1 = float(sys.argv[4])
+ball.y1 = float(sys.argv[5])
+ball.z1 = float(sys.argv[6])
+
+# Vector calculation
+# ---------------------------------------------------------------------- #
+
+vector1 = vector()
+vector1.x = ball.x1 - ball.x0
+vector1.y = ball.y1 - ball.y0
+vector1.z = ball.z1 - ball.z0
+
+# ---------------------------------------------------------------------- #
+
+show_result(ball, vector1, time)
+
+# ---------------------------------------------------------------------- #
+
+exit (0)
