@@ -4,9 +4,9 @@ The objective of this project is to solve a 4th degree equation.
 A direct resolution method does exist (Ferrari’s method), but does not generalize to higher degrees.  
 Thus, we will rather compare 3 iterative algorithms:
 
-* The bisection method,
-* Newton’s method,
-* The secant method.
+1. The bisection method,
+2. Newton’s method,
+3. The secant method.
 
 * USAGE
     - ./105torus opt a0 a1 a2 a3 a4 n
