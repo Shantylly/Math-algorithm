@@ -16,3 +16,5 @@ How each algorithm operates is detailed in each folder.
     - 203hotline  
     - 204ducks  
     - 205IQ  
+
+Enjoy ! =D
