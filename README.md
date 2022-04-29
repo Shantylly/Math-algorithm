@@ -7,7 +7,6 @@ How each algorithm operate is detailed in every folder.
 - First Epitech Year
     - 101pong  
     - 102architect  
-    - 103cipher  
     - 104intersection  
     - 105torus  
 
