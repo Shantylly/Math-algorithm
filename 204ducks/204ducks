@@ -1,0 +1,77 @@
+#!/usr/bin/env python3
+
+import sys
+import math
+
+# Usage
+# ---------------------------------------------------------------------- #
+
+def help():
+    print("USAGE")
+    print("\t./204ducks a\n")
+    print("DESCRIPTION")
+    print("\ta\tconstant")
+
+# Calculation
+# ---------------------------------------------------------------------- #
+
+def get_result(a, t, mode = 0):
+    if (mode == 0):
+        return (-a * math.exp(-t) - (4 - 3 * a) / 2 * math.exp(-2 * t) - (2 * a - 4) / 4 * math.exp(-4 * t))
+    else: 
+        return (a * math.exp(-t) + (4 - 3 * a) * math.exp(-2 * t) + (2 * a - 4) * math.exp(-4 * t))
+
+def average_time(a):
+    result = 0.0
+    t = 0.0
+    while (t < 10):
+        result += get_result(a, t, 1) * t / 1000
+        t += 0.001
+    return (result)
+
+def deviation(a, avg):
+    result = 0.0
+    t = 0.0
+    while (t < 100):
+        result += pow(t - avg, 2) * get_result(a, t, 1) / 1000
+        t += 0.001
+    return (math.sqrt(result))
+
+def duck_back(a, percent):
+    t = 0.0
+    while (t < 1000):
+        if (get_result(a, t / 60) - get_result(a, 0) >= percent):
+            return (t)
+        t += 0.002
+    exit(84)
+
+def duck(a):
+    if a == None:
+        exit(84) 
+    avg = average_time(a)
+    stdr_deviation = deviation(a, avg)
+    t_50p = duck_back(a, 0.5)
+    t_99p = duck_back(a, 0.99)
+    pduck_1min = (get_result(a, 1) - get_result(a, 0)) * 100
+    pduck_2min = (get_result(a, 2) - get_result(a, 0)) * 100
+    print("Average return time: " + str(int(avg)) + "m " + "%.2ds" % math.ceil((avg - int(avg)) * 60))
+    print("Standard deviation: " + "%.3f" % stdr_deviation)
+    print("Time after which 50%% of the ducks are back: %dm %d%ds" % (t_50p / 60, t_50p % 60 / 10, t_50p % 10))
+    print("Time after which 99%% of the ducks are back: %dm %d%ds" % (t_99p / 60, t_99p % 60 / 10, t_99p % 10))
+    print("Percentage of ducks back after 1 minute: %.1f%%" % pduck_1min)
+    print("Percentage of ducks back after 2 minutes: %.1f%%" % pduck_2min)
+
+# Error handling and parsing
+# ---------------------------------------------------------------------- #
+
+if len(sys.argv) == 2:
+    if (sys.argv[1] == "-h"):
+        help()
+    elif not (sys.argv[1].isnumeric):
+        exit(84)
+    elif (float(sys.argv[1]) >= 0 and float(sys.argv[1]) <= 2.5):
+        duck(float(sys.argv[1]))
+    else:
+        exit(84)
+else:
+    exit(84)
