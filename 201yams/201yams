@@ -3,6 +3,7 @@
 import sys
 import math
 
+# Usage
 # ---------------------------------------------------------------------- #
 
 def help():
@@ -15,6 +16,7 @@ def help():
     print("    d5     value of the fifth die (0 if not thrown")
     print("    c      expected combination")
 
+# Error handling and parsing
 # ---------------------------------------------------------------------- #
 
 if len(sys.argv) == 2:
@@ -42,6 +44,7 @@ for i in range(len(sys.argv)):
         c = sys.argv[i]
         break
 
+# Chances calculation
 # ---------------------------------------------------------------------- #
 
 def coef(a, b):
@@ -105,6 +108,7 @@ def check(n, b, c):
     else:
         print("0.00%")
 
+# Display
 # ---------------------------------------------------------------------- #
 
 print("Chances to get a ", end='')
