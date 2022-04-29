@@ -1,0 +1,125 @@
+#!/usr/bin/env python3
+
+import sys
+import math
+
+# ---------------------------------------------------------------------- #
+
+def help():
+    print("USAGE\n   ./201yams d1 d2 d3 d4 d5 c\n")
+    print("DESCRIPTION")
+    print("    d1     value of the first die (0 if not thrown")
+    print("    d2     value of the second die (0 if not thrown")
+    print("    d3     value of the third die (0 if not thrown")
+    print("    d4     value of the fourth die (0 if not thrown")
+    print("    d5     value of the fifth die (0 if not thrown")
+    print("    c      expected combination")
+
+# ---------------------------------------------------------------------- #
+
+if len(sys.argv) == 2:
+    if sys.argv[1] == "-h":
+        help()
+    exit(0)
+
+if len(sys.argv) < 2 or len(sys.argv) > 7:
+    exit(84)
+
+d = [0, 0, 0, 0, 0]
+
+for i in range(len(sys.argv)):
+    if (i == 0):
+        continue
+    if (i > 6):
+        break
+    if (sys.argv[i].isnumeric() and i == 6):
+        c = int(sys.argv[i])
+        break
+    if (sys.argv[i].isnumeric()):
+        if (int(sys.argv[i]) > 6 or int(sys.argv[i]) < 0):
+            exit(84)
+        d[i-1] = sys.argv[i]
+        continue
+
+# ---------------------------------------------------------------------- #
+
+def coef(a, b):
+    return math.factorial(a) / (math.factorial(b) * math.factorial(a-b))
+
+def binomial(a, b):
+    return coef(a, b) * pow(1/6, b) * pow(5/6, (a - b))
+
+def calcul(r, j):
+    res = 0
+    for dice in range(r - j, 5 - j + 1):
+        res += binomial(5 - j, dice)
+    print (round(res * 100, 2), end="%\n")
+
+def check(n, b, c):
+    i = 0
+    j = 0
+    k = 0
+
+    while i < 5:
+        if (d[i] == n):
+            j = j + 1
+        if (d[i] == b):
+            k = k + 1
+        i = i + 1
+
+    if (c == 1): #pair
+        if (j >= 2):
+            print("100.00%")
+        else:
+            calcul(2, j)
+    elif (c == 2): #three
+        if (j >= 3):
+            print("100.00%")
+        else:
+            calcul(3, j)
+    elif (c == 3): #four
+        if (j >= 4):
+            print("100.00%")
+        else:
+            calcul(4, j)
+    elif (c == 4): #yams
+        if (j >= 5):
+            print("100.00%")
+        else:
+            calcul(5, j)
+    elif (c == 5): #straight
+        count = 0
+        for i in range(int(n) - 4, int(n) + 1):
+            if (d.count(str(i)) >= 1):
+                count += 1
+        res = (1 / 6 ** (5 - count)) * math.factorial(5 - count) * 100
+        print(round(res, 2), end="%\n")
+    elif (c == 6): #full
+        if (j > 3):
+            j = 3
+        if (k > 2):
+            k = 2
+        res = coef(5 - j - k, 3 - j) * pow(1/6, 5 - j - k) * 100
+        print(round(res, 2), end="%\n")
+    else:
+        print("0.00%")
+
+# ---------------------------------------------------------------------- #
+
+print("Chances to get a ", end='')
+
+print(c, "pair: ", end='')
+check(c, 0, 1)
+
+print(c, "three-of-a-kind: ", end='')
+check(c, 0, 2)
+
+print(c, "four-of-a-kind: ", end='')
+check(c, 0, 3)
+
+print(c, "straight: ", end='')
+check(c, 0, 5)
+
+print(c, "yams: ", end='')
+check(c, 0, 4)
+
