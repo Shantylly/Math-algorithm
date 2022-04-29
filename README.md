@@ -1,8 +1,8 @@
 # Mathematical algorithm  
-### Different epitech subject asking for mathematical algorithms and wrotten in python
+### Different epitech subject asking for mathematical algorithms and written in python
 
 When cloning the repository please use ./\[name] to use any algorithm.
-How each algorithm operate is detailed in every folder.  
+How each algorithm operates is detailed in each folder.  
 
 - First Epitech Year
     - 101pong  
