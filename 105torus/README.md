@@ -8,6 +8,8 @@ Thus, we will rather compare 3 iterative algorithms:
 2. Newton’s method,
 3. The secant method.
 
+
+
 * USAGE
     - ./105torus opt a0 a1 a2 a3 a4 n
 
