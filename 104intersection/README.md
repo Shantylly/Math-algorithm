@@ -16,5 +16,5 @@ This algorithm allow you to compute those points for a sphere, a cylinder and a 
 
 ## Testing the algorithm
 
-In order to test the algorithm please use  
+In order to test the algorithm please use in a command prompt
 > sh test.sh
